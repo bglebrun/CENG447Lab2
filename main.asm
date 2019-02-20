@@ -6,13 +6,13 @@
 ;
 ;
 ; USING:
-; PORTD Pins 0-7
+; PORTB Pins 0-7
 ;
-; DDRD - The Port D Data Direction Register - read/write 
-; PORTD - The Port D Data Register - read/write 
-; PIND - The Port D Input Pins Register - read only 
+; DDRB - The Port D Data Direction Register - read/write 
+; PORTB - The Port D Data Register - read/write 
+; PINB - The Port D Input Pins Register - read only 
 ;
-; PORTD = B10101000; // sets digital pins 7,5,3 HIGH
+; PORTB = B10101000; // sets digital pins 7,5,3 HIGH
 ;
 ; (from https://www.arduino.cc/en/Reference/PortManipulation)
 ;
@@ -73,13 +73,13 @@ UART_RX:
 	ret
 
 flash_leds:
-	out		PORTD, out_buf
+	out		PORTB, out_buf
 	pop		out_buf
 	ret
 
 clear_leds:
 	ldi		out_buf, 0x00
-	out		PORTD, out_buf
+	out		PORTB, out_buf
 	ret
 
 	; uart_buf and uart_buf2
@@ -88,7 +88,7 @@ clear_leds:
 ;	pop		out_buf
 ;	out		r12, out_buf2
 ;	pop		out_buf2
-;	sub	
+;	sub		
 
 ; Replace with your application code
 .org 0x0034
@@ -97,7 +97,7 @@ start:
 	out		SREG, r1			; clear sreg for safety
 
 	ldi		r16, 0xff			; load 0x11111111 to reg 16
-	out		DDRD, r16			; set portd to output
+	out		DDRB, r16			; set portd to output
 
 	clr		r16					; clear it because it's one of our buffers
 
