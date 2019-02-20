@@ -69,12 +69,22 @@ UART_RX:
 	pop		r17
 	ret
 
+flash_leds:
+	out		PORTD, out_buf
+	pop		out_buf
+	ret
+
+clear_leds:
+	ldi		out_buf, 0x00
+	out		PORTD, out_buf
+	ret
+
 ; Replace with your application code
 start:
     clr		r1
 	out		SREG, r1			; clear sreg for safety
 
-	ldi		r16, 0xff
+	ldi		r16, 0xff			; load 0x11111111 to reg 16
 	out		DDRD, r16			; set portd to output
 
 	clr		r16					; clear it because it's one of our buffers
