@@ -19,6 +19,9 @@
 ;
 .cseg
 
+;.org 0x0000
+;	jmp reset
+
 ; UART configuration
 .equ F_CPU = 16000000
 .equ BAUDRATE = 9600
@@ -79,7 +82,16 @@ clear_leds:
 	out		PORTD, out_buf
 	ret
 
+	; uart_buf and uart_buf2
+;get_number
+;	out		r11, out_buf
+;	pop		out_buf
+;	out		r12, out_buf2
+;	pop		out_buf2
+;	sub	
+
 ; Replace with your application code
+.org 0x0034
 start:
     clr		r1
 	out		SREG, r1			; clear sreg for safety
