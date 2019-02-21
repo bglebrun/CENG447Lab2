@@ -19,8 +19,14 @@
 ;
 .cseg
 
-;.org 0x0000
-;	jmp reset
+.org 0x0000
+	rjmp start
+
+.org 0x0024
+	rjmp UART_RX
+
+.org 0x0028
+	rjmp UART_TX
 
 ; UART configuration
 .equ F_CPU = 16000000
@@ -30,8 +36,6 @@
 .def out_buf = r16
 .def uart_buf = r17
 .def uart_buf2 = r18
-
-rjmp start
 
 UART_Init:
 	push	uart_buf
@@ -60,7 +64,7 @@ UART_TX:
 
 	sts		UDR0, out_buf
 	pop		uart_buf
-	ret
+	reti
 
 UART_RX:
 	push	out_buf
@@ -70,7 +74,7 @@ UART_RX:
 
 	lds		r16, UDR0
 	pop		r17
-	ret
+	reti
 
 flash_leds:
 	out		PORTB, out_buf
@@ -92,6 +96,7 @@ clear_leds:
 
 ; Replace with your application code
 .org 0x0034
+.include "wait2.asm"
 start:
     clr		r1
 	out		SREG, r1			; clear sreg for safety
@@ -107,7 +112,12 @@ start:
 	out		SPH, r29
 
 	rcall	UART_INIT
+	sei
     rjmp	prgmloop
 
 prgmloop:
-	rcall UART_RX
+	rcall wait_1_second
+	rcall flash_leds
+	rcall wait_1_second
+	rcall clear_leds
+	rjmp prgmloop
