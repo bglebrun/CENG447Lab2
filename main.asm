@@ -95,7 +95,7 @@ clear_leds:
 ;	sub		
 
 ; Replace with your application code
-.org 0x0034
+.org 0x0056
 .include "wait2.asm"
 start:
     clr		r1
