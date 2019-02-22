@@ -18,7 +18,7 @@
 ;
 ;
 .cseg
-
+; reset interrupt vector, should just immediately restart the program
 .org 0x0000
 	rjmp start
 
@@ -34,6 +34,7 @@
 
 .org 0x0034
 
+; UART initialization
 UART_Init:
 	push	uart_buf
 	push	uart_buf2
@@ -52,7 +53,7 @@ UART_Init:
 	pop		uart_buf2
 	pop		uart_buf
 	ret
-
+; UART transmit, messages should be put in the uart_buf register
 UART_TX:
 	push	uart_buf
 	lds		uart_buf, UCSR0A
@@ -63,7 +64,7 @@ UART_TX:
 	pop		uart_buf
 	rcall itoa
 	ret
-
+; UART recieve,reads from out_buf register
 UART_RX:
 	push	uart_buf
 	lds		uart_buf, UCSR0A
@@ -101,7 +102,7 @@ clear_leds:
 .def tmp = r22			; tmp location
 
 .include "wait2.asm"
-
+; Initialization funciton, should be called for every reset interrupt
 start:
 	clr		r1
 	out		SREG, r1			; clear sreg for safety
@@ -122,7 +123,7 @@ start:
 	rcall	UART_INIT
 	sei
     rjmp	prgmloop
-
+; Main program loop
 prgmloop:
 	rcall wait_1_second
 	rcall flash_leds
@@ -131,12 +132,18 @@ prgmloop:
 	inc num
 	rjmp prgmloop
 
+; itoa function for our bit to ascii code for digits 0 through 10
+; in - num in byte
+; out - alpha in ASCII code
 itoa:
 	mov		tmp, num
 	subi	tmp, '0'
 	mov		alpha,  tmp
 	ret
 
+; atoi function for our ascii to bit representation for digits 0 through 10
+; in - alpha in ASCII code
+; out - num in byte code
 atoi:
 	mov		tmp, alpha
 	subi	tmp, 0 - '0'
