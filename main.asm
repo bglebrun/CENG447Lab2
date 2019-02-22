@@ -25,14 +25,14 @@
 ; UART recieve interrupt
 .org 0x0024
 	rjmp UART_RX
-	rcall atoi
 	reti
 
 ; UART buffer send interrupt
 .org 0x0028
 	rjmp UART_TX
-	rcall itoa
 	reti
+
+.org 0x0034
 
 UART_Init:
 	push	uart_buf
@@ -61,16 +61,18 @@ UART_TX:
 
 	sts		UDR0, out_buf
 	pop		uart_buf
+	rcall itoa
 	ret
 
 UART_RX:
-	push	out_buf
-	lds		out_buf, UCSR0A
-	sbrs	out_buf, RXC0	; Check if there's data to write
+	push	uart_buf
+	lds		uart_buf, UCSR0A
+	sbrs	uart_buf, RXC0	; Check if there's data to write
 	rjmp	UART_RX			; Loop if no
 
-	lds		r16, UDR0
-	pop		r17
+	lds		out_buf, UDR0
+	pop		uart_buf
+	rcall atoi
 	ret
 
 flash_leds:
@@ -84,7 +86,7 @@ clear_leds:
 	ret
 
 ; Replace with your application code
-.org 0x0059
+.org 0x0100
 
 ; UART configuration
 .equ F_CPU = 16000000
@@ -101,7 +103,7 @@ clear_leds:
 .include "wait2.asm"
 
 start:
-  clr		r1
+	clr		r1
 	out		SREG, r1			; clear sreg for safety
 
 	ldi		r16, 0xff			; load 0x11111111 to reg 16
