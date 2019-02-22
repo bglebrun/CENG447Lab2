@@ -33,9 +33,12 @@
 .equ BAUDRATE = 9600
 .equ BAUD_PRESCALE = F_CPU / (BAUDRATE*16)-1
 ; defines r16 as output buffer
-.def out_buf = r16
-.def uart_buf = r17
-.def uart_buf2 = r18
+.def out_buf = r16		; uart rx buffer
+.def uart_buf = r17		; uart tx buffer
+.def uart_buf2 = r18	; overflow buffer
+.def num = r24			; value we flash to LEDs
+.def alpha = r23		; value we send to uart
+.def tmp = r22			; tmp location
 
 UART_Init:
 	push	uart_buf
@@ -86,14 +89,6 @@ clear_leds:
 	out		PORTB, out_buf
 	ret
 
-	; uart_buf and uart_buf2
-;get_number
-;	out		r11, out_buf
-;	pop		out_buf
-;	out		r12, out_buf2
-;	pop		out_buf2
-;	sub		
-
 ; Replace with your application code
 .org 0x0056
 .include "wait2.asm"
@@ -105,6 +100,9 @@ start:
 	out		DDRB, r16			; set portd to output
 
 	clr		r16					; clear it because it's one of our buffers
+
+	ldi		num, 0x00
+	rcall	itoa
 
 	ldi		r28, LOW(RAMEND)
 	ldi		r29, HIGH(RAMEND)
@@ -121,3 +119,15 @@ prgmloop:
 	rcall wait_1_second
 	rcall clear_leds
 	rjmp prgmloop
+
+itoa:
+	ldi		tmp, num
+	sub		tmp, '0'
+	ldi		alpha,  tmp
+	ret
+
+atoi:
+	ldi		tmp, alpha
+	add		tmp, '0'
+	ldi		num, tmp
+	ret
