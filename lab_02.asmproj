@@ -69,6 +69,12 @@
     <Compile Include="main.asm">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="wait.asm">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="wait2.asm">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(AVRSTUDIO_EXE_PATH)\\Vs\\Assembler.targets" />
 </Project>
