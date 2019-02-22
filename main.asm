@@ -97,7 +97,7 @@ start:
 	out		SREG, r1			; clear sreg for safety
 
 	ldi		r16, 0xff			; load 0x11111111 to reg 16
-	out		DDRB, r16			; set portd to output
+	out		DDRB, r16			; set portb to output
 
 	clr		r16					; clear it because it's one of our buffers
 
