@@ -8,9 +8,9 @@
 ; USING:
 ; PORTB Pins 0-7
 ;
-; DDRB - The Port D Data Direction Register - read/write 
-; PORTB - The Port D Data Register - read/write 
-; PINB - The Port D Input Pins Register - read only 
+; DDRB - The Port D Data Direction Register - read/write
+; PORTB - The Port D Data Register - read/write
+; PINB - The Port D Input Pins Register - read only
 ;
 ; PORTB = B10101000; // sets digital pins 7,5,3 HIGH
 ;
@@ -118,6 +118,7 @@ prgmloop:
 	rcall flash_leds
 	rcall wait_1_second
 	rcall clear_leds
+	inc num
 	rjmp prgmloop
 
 itoa:
