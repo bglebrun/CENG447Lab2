@@ -58,32 +58,34 @@ UART_TX:
 	push	uart_buf
 	lds		uart_buf, UCSR0A
 	sbrs	uart_buf, UDRE0	; Check if there's data to read
-	rjmp	UART_TX			; Loop if no
+	rjmp	UART_TX			; Loop if there is waiting data
+	
+	rcall itoa ; convert num to 'alpha'
 
-	sts		UDR0, out_buf
+	sts		UDR0, alpha ; output alphanumeric
 	pop		uart_buf
-	rcall itoa
 	ret
 ; UART recieve,reads from out_buf register
 UART_RX:
 	push	uart_buf
 	lds		uart_buf, UCSR0A
 	sbrs	uart_buf, RXC0	; Check if there's data to write
-	rjmp	UART_RX			; Loop if no
+	rjmp	UART_RX			; Loop if no data to read
 
 	lds		out_buf, UDR0
 	pop		uart_buf
-	rcall atoi
+	mov alpha, out_buf ; move what we read into the 'alpha' register
+	rcall atoi ; set num from 'alpha'
 	ret
 
 flash_leds:
-	out		PORTB, out_buf
-	pop		out_buf
+	out		PORTB, num
+	rcall	UART_TX
 	ret
 
 clear_leds:
-	ldi		out_buf, 0x00
-	out		PORTB, out_buf
+	ldi		tmp, 0x00
+	out		PORTB, tmp
 	ret
 
 ; Replace with your application code
@@ -129,7 +131,8 @@ prgmloop:
 	rcall flash_leds
 	rcall wait_1_second
 	rcall clear_leds
-	inc num
+	inc num ; consider moving inc num to 
+			; clear_leds func (to prevent interrupts from messing with value)
 	rjmp prgmloop
 
 ; itoa function for our bit to ascii code for digits 0 through 10
