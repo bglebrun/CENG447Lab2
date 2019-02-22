@@ -1,6 +1,15 @@
 /*
  * wait2.asm
  *
+ *  Triple nested loop wait implementation. consumes exactly
+ *  16,000,000 cycles (1 second at 16MHz), bringing the total
+ *	cost of the function to 16,000,003 cycles including an rcall
+ *	to the procedure.
+ *  
+ *  uses registers r16, r17, and r18, pushing their states to the
+ *  stack. rjmp's past the definition to allow .include directive
+ *	to work as expected.
+ *
  *  Created: 2/19/2019 2:20:32 PM
  *   Author: Benjamin Garcia
  */ 
