@@ -28,18 +28,6 @@
 .org 0x0028
 	rjmp UART_TX
 
-; UART configuration
-.equ F_CPU = 16000000
-.equ BAUDRATE = 9600
-.equ BAUD_PRESCALE = F_CPU / (BAUDRATE*16)-1
-; defines r16 as output buffer
-.def out_buf = r16		; uart rx buffer
-.def uart_buf = r17		; uart tx buffer
-.def uart_buf2 = r18	; overflow buffer
-.def num = r24			; value we flash to LEDs
-.def alpha = r23		; value we send to uart
-.def tmp = r22			; tmp location
-
 UART_Init:
 	push	uart_buf
 	push	uart_buf2
@@ -91,7 +79,21 @@ clear_leds:
 
 ; Replace with your application code
 .org 0x0056
+
+; UART configuration
+.equ F_CPU = 16000000
+.equ BAUDRATE = 9600
+.equ BAUD_PRESCALE = F_CPU / (BAUDRATE*16)-1
+; defines r16 as output buffer
+.def out_buf = r16		; uart rx buffer
+.def uart_buf = r17		; uart tx buffer
+.def uart_buf2 = r18	; overflow buffer
+.def num = r24			; value we flash to LEDs
+.def alpha = r23		; value we send to uart
+.def tmp = r22			; tmp location
+
 .include "wait2.asm"
+
 start:
     clr		r1
 	out		SREG, r1			; clear sreg for safety
@@ -122,13 +124,13 @@ prgmloop:
 	rjmp prgmloop
 
 itoa:
-	ldi		tmp, num
-	sub		tmp, '0'
-	ldi		alpha,  tmp
+	mov		tmp, num
+	subi	tmp, '0'
+	mov		alpha,  tmp
 	ret
 
 atoi:
-	ldi		tmp, alpha
-	add		tmp, '0'
-	ldi		num, tmp
+	mov		tmp, alpha
+	subi	tmp, 0 - '0'
+	mov		num, tmp
 	ret

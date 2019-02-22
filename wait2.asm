@@ -5,9 +5,9 @@
  *   Author: Benjamin Garcia
  */ 
 
-.def i=r19
-.def j=r20
-.def k=r21
+;.def i=r16
+;.def j=r17
+;.def k=r18
 
 rjmp end_wait_2_asm
 
@@ -16,33 +16,33 @@ rjmp end_wait_2_asm
 ; 16,000,000 = 4i + 4ij + 4ijk +16
 wait_1_second:
 	; pushing = 6 cycles
-	push i
-	push j
-	push k
+	push r16
+	push r17
+	push r18
 
-	ldi i, 0x6c ; load 108
+	ldi r16, 0x6c ; load 108
 	loop_i_wait_1_second: ; 4i + 4ij + 4ijk - 1 
-		ldi j, 0xbc ; load 188
+		ldi r17, 0xbc ; load 188
 		loop_j_wait_1_second: ; 4j + 4jk - 1
-			ldi k, 0xc4 ; load 196
+			ldi r18, 0xc4 ; load 196
 			loop_k_wait_1_second: ; 4k - 1
-				dec k 
+				dec r18 
 				breq end_k_wait_1_second ; 1 cycle (2 on last iter)
 				rjmp loop_k_wait_1_second ; 2 cycles (not executed on last iter)
 			end_k_wait_1_second:
-			dec j
+			dec r17
 			breq end_j_wait_1_second ; 1 cycle (2 on last iter)
 			rjmp loop_j_wait_1_second ; 2 cycles (not executed on last iter)
 		end_j_wait_1_second:
-		dec i
+		dec r16
 		breq end_i_wait_1_second ; 1 cycle (2 on last iter)
 		rjmp loop_i_wait_1_second ; 2 cycles (not executed on last iter)
 	end_i_wait_1_second:
 
 	; popping and return = 10 cycles
-	pop k
-	pop j
-	pop i
+	pop r18
+	pop r17
+	pop r16
 	ret
 
 end_wait_2_asm:

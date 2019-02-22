@@ -11,10 +11,10 @@
 ;   Author: Benjamin Garcia
 ; 
 
-.def i = r16
-.def j = r17
-.def k = r18
-.def l = r19
+.def i=r25
+.def j=r26
+.def k=r27
+.def l = r28
 
 rjmp start
 
