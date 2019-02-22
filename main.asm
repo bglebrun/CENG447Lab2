@@ -22,10 +22,14 @@
 .org 0x0000
 	rjmp start
 
+; UART recieve interrupt
 .org 0x0024
+	rcall atoi
 	rjmp UART_RX
 
+; UART buffer send interrupt
 .org 0x0028
+	rcall itoa
 	rjmp UART_TX
 
 UART_Init:
@@ -78,7 +82,7 @@ clear_leds:
 	ret
 
 ; Replace with your application code
-.org 0x0056
+.org 0x0057
 
 ; UART configuration
 .equ F_CPU = 16000000
