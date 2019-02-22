@@ -24,13 +24,15 @@
 
 ; UART recieve interrupt
 .org 0x0024
-	rcall atoi
 	rjmp UART_RX
+	rcall atoi
+	reti
 
 ; UART buffer send interrupt
 .org 0x0028
-	rcall itoa
 	rjmp UART_TX
+	rcall itoa
+	reti
 
 UART_Init:
 	push	uart_buf
@@ -59,7 +61,7 @@ UART_TX:
 
 	sts		UDR0, out_buf
 	pop		uart_buf
-	reti
+	ret
 
 UART_RX:
 	push	out_buf
@@ -69,7 +71,7 @@ UART_RX:
 
 	lds		r16, UDR0
 	pop		r17
-	reti
+	ret
 
 flash_leds:
 	out		PORTB, out_buf
@@ -82,7 +84,7 @@ clear_leds:
 	ret
 
 ; Replace with your application code
-.org 0x0057
+.org 0x0059
 
 ; UART configuration
 .equ F_CPU = 16000000
@@ -99,7 +101,7 @@ clear_leds:
 .include "wait2.asm"
 
 start:
-    clr		r1
+  clr		r1
 	out		SREG, r1			; clear sreg for safety
 
 	ldi		r16, 0xff			; load 0x11111111 to reg 16
