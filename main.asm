@@ -140,7 +140,7 @@ prgmloop:
 ; out - alpha in ASCII code
 itoa:
 	mov		tmp, num
-	subi	tmp, '0'
+	subi	tmp, 0 -'0'
 	mov		alpha,  tmp
 	ret
 
@@ -149,6 +149,6 @@ itoa:
 ; out - num in byte code
 atoi:
 	mov		tmp, alpha
-	subi	tmp, 0 - '0'
+	subi	tmp, '0'
 	mov		num, tmp
 	ret
