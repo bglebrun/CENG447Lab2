@@ -136,7 +136,7 @@ prgmloop:
 	rjmp prgmloop
 
 incnum:
-	cpi num, 10
+	cpi num, 9
 	breq resetnum
 	inc num
 	ret
