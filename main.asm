@@ -115,7 +115,7 @@ start:
 
 	clr		r16					; clear it because it's one of our buffers
 
-	ldi		num, 0x00
+	ldi		num, 7
 	rcall	itoa
 
 	ldi		r28, LOW(RAMEND)
@@ -134,21 +134,21 @@ prgmloop:
 	rcall wait_1_second
 	rcall wait_1_second
 	rcall clear_leds
-	rcall incnum ; consider moving inc num to 
+	;rcall incnum ; consider moving inc num to 
 			; clear_leds func (to prevent interrupts from messing with value)
 	rjmp prgmloop
 
 ; TODO: This will be removed, assignment document does not mention incrementing by one
 ; every cycle. I'll keep it in for now as a debugging tool, however it might be
 ; interfering with our uart rx process/interrupt
-incnum:
-	cpi num, 7
-	breq resetnum
-	inc num
-	ret
-resetnum:
-	ldi num, 0
-	ret
+;incnum:
+;	cpi num, 7
+;	breq resetnum
+;	inc num
+;	ret
+;resetnum:
+;	ldi num, 0
+;	ret
 
 ; itoa function for our bit to ascii code for digits 0 through 10
 ; in - num in byte
