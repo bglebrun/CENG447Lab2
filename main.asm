@@ -24,12 +24,7 @@
 
 ; UART recieve interrupt
 .org 0x0024
-	rjmp UART_RX
-	reti
-
-; UART buffer send interrupt
-.org 0x0028
-	rjmp UART_TX
+	rcall UART_RX
 	reti
 
 .org 0x0034
@@ -39,7 +34,8 @@ UART_Init:
 	push	uart_buf
 	push	uart_buf2
 	lds		uart_buf, UCSR0B
-	ori		uart_buf, 0x18
+	;ori		uart_buf, 0x18 ; original line (rx and tx)
+	ori		uart_buf, 0x98 ; (enable rx,tx, and rx interrupt)
 	sts		UCSR0B, uart_buf ; enables rx tx
 
 	lds		uart_buf, UCSR0C
@@ -66,15 +62,9 @@ UART_TX:
 	pop		uart_buf
 	ret
 ; UART recieve,reads from out_buf register
-; This is a "blocking call"
+; Uses the UART RX Complete interrupt
 UART_RX:
-	push	uart_buf
-	lds		uart_buf, UCSR0A
-	sbrs	uart_buf, RXC0	; Check if there's data to write
-	rjmp	UART_RX			; Loop if no data to read
-
 	lds		out_buf, UDR0
-	pop		uart_buf
 	mov		alpha, out_buf ; move what we read into the 'alpha' register
 	rcall	atoi ; set num from 'alpha'
 	ret
@@ -137,18 +127,6 @@ prgmloop:
 	;rcall incnum ; consider moving inc num to 
 			; clear_leds func (to prevent interrupts from messing with value)
 	rjmp prgmloop
-
-; TODO: This will be removed, assignment document does not mention incrementing by one
-; every cycle. I'll keep it in for now as a debugging tool, however it might be
-; interfering with our uart rx process/interrupt
-;incnum:
-;	cpi num, 7
-;	breq resetnum
-;	inc num
-;	ret
-;resetnum:
-;	ldi num, 0
-;	ret
 
 ; itoa function for our bit to ascii code for digits 0 through 10
 ; in - num in byte
