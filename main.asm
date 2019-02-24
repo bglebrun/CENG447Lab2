@@ -60,7 +60,7 @@ UART_TX:
 	sbrs	uart_buf, UDRE0	; Check if there's data to read
 	rjmp	UART_TX			; Loop if there is waiting data
 	
-	rcall itoa ; convert num to 'alpha'
+	rcall	itoa ; convert num to 'alpha'
 
 	sts		UDR0, alpha ; output alphanumeric
 	pop		uart_buf
@@ -74,8 +74,8 @@ UART_RX:
 
 	lds		out_buf, UDR0
 	pop		uart_buf
-	mov alpha, out_buf ; move what we read into the 'alpha' register
-	rcall atoi ; set num from 'alpha'
+	mov		alpha, out_buf ; move what we read into the 'alpha' register
+	rcall	atoi ; set num from 'alpha'
 	ret
 
 flash_leds:
