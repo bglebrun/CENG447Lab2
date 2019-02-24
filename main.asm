@@ -66,6 +66,7 @@ UART_TX:
 	pop		uart_buf
 	ret
 ; UART recieve,reads from out_buf register
+; This is a "blocking call"
 UART_RX:
 	push	uart_buf
 	lds		uart_buf, UCSR0A
