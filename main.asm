@@ -105,7 +105,7 @@ start:
 
 	clr		r16					; clear it because it's one of our buffers
 
-	ldi		num, 7
+	ldi		num, 0
 	rcall	itoa
 
 	ldi		r28, LOW(RAMEND)
