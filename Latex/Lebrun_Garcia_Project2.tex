@@ -90,15 +90,21 @@ Does the exact opposite of ATOI, it converts a numeric value to an ASCII charact
 
 This is accomplished by subtracting the quantity (0 - '0') from the number (equivalent to adding 0x30). This value is sent over the serial line to the computer, where Putty can display it.
 
-\subsection*{UART\_INIT}
-
 \subsection*{UART\_RX (Interrupt)}
 To handle the RX complete interrupt, we first altered the Init code provided to set UCSR0B to 0x98 to enable bits 7 (RX Complete Interrupt), 4 (RX Enable), and 3(TX Enable). Once the global interrupt bit was set, our function 'UART\_RX' would be called whenever the UART buffer was filled. This function calls ATOI to set the counter and then returns control to the last instruction executed.
 
-\subsection*{UART\_TX}
-Unlike the RX function, UART\_TX is not an interrupt, and is called every time the 'flash\_leds' function is called 
+\subsection*{UART\_INIT}
+UART_INIT is boilerplate code that was provided with the lab. The only change we have made is to enable the 'RX Complete Interrupt' as mentioned above.
 
-\subsection*{Main Loop and Startup}
+This function configures the UART control and status registers to allow writing and reading using the '8n1' protocol on the UART port. Additionally, communication is configured to use a baudrate of 9600.
+
+\subsection*{UART\_TX}
+Unlike the RX function, UART\_TX is not an interrupt, and is called every time the 'flash\_leds' function is called. This function waits until the buffer is empty to write, then calls itoa to convert the counter to an ASCII character and outputs it to the serial port.
+
+\subsection*{Program Loop and Startup}
+Our startup routine first assigned 0xff to DDRB to enable output. Then we initialize our counter to 0, and setup the stack to begin at RAMEND. Finally, we call the UART\_INIT function to configure the UART for the Program Loop.
+
+The Program Loop starts by waiting for two seconds, then it will flash the LEDs, outputting the value of our counter to the LEDs and the serial port. Then, two seconds later, it turns off the LEDs. After the LEDs have been turned off, we jump back to the start of the Program Loop.
 
 \section*{Discussion}
 Discuss challenges met in completion of the lab and how you solved them. Communicate what you learned from the lab, and comment on where this lab material would be applicable 'in the real world'. 
