@@ -137,6 +137,9 @@ prgmloop:
 			; clear_leds func (to prevent interrupts from messing with value)
 	rjmp prgmloop
 
+; TODO: This will be removed, assignment document does not mention incrementing by one
+; every cycle. I'll keep it in for now as a debugging tool, however it might be
+; interfering with our uart rx process/interrupt
 incnum:
 	cpi num, 7
 	breq resetnum
