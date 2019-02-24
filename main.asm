@@ -131,9 +131,18 @@ prgmloop:
 	rcall flash_leds
 	rcall wait_1_second
 	rcall clear_leds
-	inc num ; consider moving inc num to 
+	rcall incnum ; consider moving inc num to 
 			; clear_leds func (to prevent interrupts from messing with value)
 	rjmp prgmloop
+
+incnum:
+	cpi num, 10
+	breq resetnum
+	inc num
+	ret
+resetnum:
+	ldi num, 0
+	ret
 
 ; itoa function for our bit to ascii code for digits 0 through 10
 ; in - num in byte
