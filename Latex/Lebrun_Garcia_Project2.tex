@@ -1,0 +1,121 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Memo
+% LaTeX Template
+% Version 1.0 (30/12/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Rob Oakes (http://www.oak-tree.us) with modifications by:
+% Vel (vel@latextemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[letterpaper,11pt]{texMemo} % Set the paper size (letterpaper, a4paper, etc) and font size (10pt, 11pt or 12pt)
+
+\usepackage{parskip} % Adds spacing between paragraphs
+\usepackage[colorlinks]{hyperref}
+\usepackage{graphicx}
+\usepackage{float}
+\hypersetup{citecolor=DeepPink4}
+\hypersetup{linkcolor=red}
+\hypersetup{urlcolor=blue}
+\usepackage{cleveref}
+\setlength{\parindent}{15pt} % Indent paragraphs
+
+%----------------------------------------------------------------------------------------
+%	MEMO INFORMATION
+%----------------------------------------------------------------------------------------
+
+\memoto{Dr.Randy Hoover} % Recipient(s)
+
+\memofrom{Benjamin Lebrun, Benjamin Garcia} % Sender(s)
+
+\memosubject{Lab Assignment 2: AVR Assembly and UART Communication} % Memo subject
+
+\memodate{\today} % Date, set to \today for automatically printing todays date
+
+%\logo{\includegraphics[width=0.1\textwidth]{logo.png}} % Institution logo at the top right of the memo, comment out this line for no logo
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Print the memo header information
+
+%----------------------------------------------------------------------------------------
+%	MEMO CONTENT
+%----------------------------------------------------------------------------------------
+
+\section*{Introduction}
+%This section \textit{briefly} communicates what you have been asked to accomplish in the lab, how you approached it, and what results you saw. This is \textbf{not} an area for manifestos. 
+This lab required us to output the value in a counter to three LEDs as well as to the UART serial port. Additionally, we were required to accept input from the serial port and use this input to set the value of the counter. A component of the output requirement was that it print/flash the LEDs every two seconds using a wait function that we created.
+
+Our implementation holds the counter in a register and converts to and from an ASCII representation for presenting information over the serial port. Pins 0, 1, and 2 on PORTB were used for lighting up the LEDs. To handle receiving information over the serial port, we enabled the 'UART RX Complete interrupt' so that whenever a key is pressed, it will set the value of the counter for the next time the LEDs are flashed. Our wait uses a triply nested loop to consume 16,000,000 cycles (1 second when running at 16MHz).
+
+The finished implementation blinks on a two second cycle (two seconds on, two seconds off) and key-presses are registered for the next cycle. When first turned on, the counter is initially set to 0, and the LEDs are off.
+
+
+\section*{Equipment}
+This lab required the following equipment:
+\begin{itemize}
+\item 3 resistors (220$\Omega$)
+\item 3 LEDs
+\item 4 wires (male-male)
+\item 1 USB-A to USB-B cable
+\item 1 breadboard
+\item 1 Arduino UNO (ATMega328P)
+\item Atmel Studio 7
+\item Putty
+\end{itemize}
+
+\subsection*{configuration}
+The Arduino was connected to the computer with the USB-A to USB-B cable. On the breadboard, each LED was placed in a circuit with a single resistor connected to ground. One of the Arduino's ground pins was connected to the breadboard's ground, and the LEDs were connected to PORTB pins 0, 1, and 2 (pins numbered 8, 9, 10 on the Arduino).
+
+\section*{Implementation}
+\subsection*{One Second Wait}
+The wait implementation uses three registers as loop variables to create a busy loop that occupies 15,999,984 cycles with variable pushing and popping and the function's return occupying a further 16 cycles to give 16,000,000 cycles.
+
+\subsection*{ATOI}
+Handles converting numbers in ASCII representation to their depicted value (i.e. '7' is converted from 0x37 to 0x07).
+
+It subtracts '0' (0x30) from the incoming ASCII character value to produce the numeric value. Once this is done, the value is stored in the counter for use on the next light cycle.
+
+\subsection*{ITOA}
+Does the exact opposite of ATOI, it converts a numeric value to an ASCII character (i.e. 0x07 converts to 0x37 '7').
+
+This is accomplished by subtracting the quantity (0 - '0') from the number (equivalent to adding 0x30). This value is sent over the serial line to the computer, where Putty can display it.
+
+\subsection*{UART\_INIT}
+
+\subsection*{UART\_RX (Interrupt)}
+To handle the RX complete interrupt, we first altered the Init code provided to set UCSR0B to 0x98 to enable bits 7 (RX Complete Interrupt), 4 (RX Enable), and 3(TX Enable). Once the global interrupt bit was set, our function 'UART\_RX' would be called whenever the UART buffer was filled. This function calls ATOI to set the counter and then returns control to the last instruction executed.
+
+\subsection*{UART\_TX}
+Unlike the RX function, UART\_TX is not an interrupt, and is called every time the 'flash\_leds' function is called 
+
+\subsection*{Main Loop and Startup}
+
+\section*{Discussion}
+Discuss challenges met in completion of the lab and how you solved them. Communicate what you learned from the lab, and comment on where this lab material would be applicable 'in the real world'. 
+
+\section*{Responses}
+Respond intelligently and at necessary length to any questions posed in the lab assignment.
+\begin{enumerate}
+\item Enumerations are a useful for addressing specific questions.
+\end{enumerate} 
+
+\section*{Appendices}
+You'll want to put your full code here, possibly datasheets. Each appendix should start on a fresh page. Check out the \textbf{lstlisting} package, it might make your life easier. 
+\newpage
+
+\section*{Appendix A: Nothing}
+
+%----------------------------------------------------------------------------------------
+
+\end{document}
+\grid
