@@ -2,7 +2,7 @@
 ; lab_02.asm
 ;
 ; Created: 2/16/2019 13:50:57
-; Author : Ben L
+; Author : Ben & Ben
 ;
 ;
 ; USING:
@@ -128,7 +128,9 @@ start:
 ; Main program loop
 prgmloop:
 	rcall wait_1_second
+	rcall wait_1_second
 	rcall flash_leds
+	rcall wait_1_second
 	rcall wait_1_second
 	rcall clear_leds
 	rcall incnum ; consider moving inc num to 
@@ -136,7 +138,7 @@ prgmloop:
 	rjmp prgmloop
 
 incnum:
-	cpi num, 9
+	cpi num, 7
 	breq resetnum
 	inc num
 	ret
