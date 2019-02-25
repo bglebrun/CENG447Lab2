@@ -77,6 +77,14 @@ This lab required the following equipment:
 \subsection*{configuration}
 The Arduino was connected to the computer with the USB-A to USB-B cable. On the breadboard, each LED was placed in a circuit with a single resistor connected to ground. One of the Arduino's ground pins was connected to the breadboard's ground, and the LEDs were connected to PORTB pins 0, 1, and 2 (pins numbered 8, 9, 10 on the Arduino).
 
+\begin{figure}[!ht]
+\begin{center}
+\includegraphics[scale=0.25]{./configuration.jpg}
+\caption{Picture of the wiring setup}
+\end{center}
+\end{figure}
+
+\newpage
 \section*{Implementation}
 \subsection*{One Second Wait}
 The wait implementation uses three registers as loop variables to create a busy loop that occupies 15,999,984 cycles with variable pushing and popping and the function's return occupying a further 16 cycles to give 16,000,000 cycles.
@@ -129,8 +137,6 @@ on the ATMega328P are very different, yet we are able to plug a cable between th
 communicate! How is this possible on the Arduino Uno R3?}
 
 \item The Arduino Uno R3 uses a dedicated memory address to write to a built-in USB to serial adaptor. This adaptor has a specialized chip which attempts to carry UART communication through USB protocol, and generally has its own built in EEPROM, voltage regulators, receivers and transmitters and internal timing oscillator and a host of other features to allow communication conversion between USB and UART.
-
-The Arduino Uno R3 uses the ATMEGA8U2-MU (Datasheet: \url{http://ww1.microchip.com/downloads/en/DeviceDoc/doc7799.pdf}) which handles all communications between USB and the serial UART port on the ATMega328P.
 
 \section{Explain each step of the UART RX call provided in this document.}
 
