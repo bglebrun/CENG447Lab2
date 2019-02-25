@@ -129,6 +129,8 @@ communicate! How is this possible on the Arduino Uno R3?}
 
 \item The Arduino Uno R3 uses a dedicated memory address to write to a built-in USB to serial adaptor. This adaptor has a specialized chip which attempts to carry UART communication through USB protocol, and generally has its own built in EEPROM, voltage regulators, receivers and transmitters and internal timing oscillator and a host of other features to allow communication conversion between USB and UART.
 
+The Arduino Uno R3 uses the ATMEGA8U2-MU (Datasheet: \url{http://ww1.microchip.com/downloads/en/DeviceDoc/doc7799.pdf}) which handles all communications between USB and the serial UART port on the ATMega328P.
+
 \section{Explain each step of the UART RX call provided in this document.}
 
 \item UART RX first pushes the contents of register 17 onto the program stack for storage, then loads the status of the UART buffer from the UCSR0A register. We use this register to read the status of the UART, such as if the buffer is full or if communication has ended. In our case we are waiting for communication to end and compare the RCX0 register to do this. We use a comparison to check if this bit is set; if it is, we then load the contents of the UDR0 data register into register 16. Then we pop the data from the program stack back onto register 17 where we previously carried our UART status register and carry on.
