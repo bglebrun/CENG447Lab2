@@ -21,6 +21,7 @@
 \usepackage[colorlinks]{hyperref}
 \usepackage{graphicx}
 \usepackage{float}
+\usepackage{listings}
 \hypersetup{citecolor=DeepPink4}
 \hypersetup{linkcolor=red}
 \hypersetup{urlcolor=blue}
@@ -136,12 +137,21 @@ communicate! How is this possible on the Arduino Uno R3?}
 \end{enumerate}
 
 \section*{Appendices}
-
+The following files are included as appendices:
+\begin{itemize}
+\item main.asm
+\item wait2.asm (the version of the wait function used in the program)
+\end{itemize}
 \newpage
 
-\section*{Appendix A: Nothing}
-
-%----------------------------------------------------------------------------------------
-
+\section*{Appendix A: main.asm}
+\begin{tiny}
+\lstinputlisting{../main.asm}
+\end{tiny}
+\newpage
+\section*{Appendix B: wait2.asm}
+\begin{tiny}
+\lstinputlisting{../wait2.asm}
+\end{tiny}
 \end{document}
 \grid
